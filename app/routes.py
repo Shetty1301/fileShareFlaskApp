@@ -246,6 +246,34 @@ def get_user_uploads():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@main_bp.route('/delete-by-email/<file_id>', methods=['DELETE'])
+def delete_file_by_email(file_id):
+    """Delete a file uploaded with a specific email"""
+    email = request.args.get('email', '')
+    
+    if not email:
+        return jsonify({"error": "Email parameter is required"}), 400
+    
+    try:
+        # Get file record
+        file_record = db.files.find_one({
+            "_id": ObjectId(file_id),
+            "email": email
+        })
+        
+        if not file_record:
+            return jsonify({"error": "File not found or not authorized"}), 404
+        
+        # Remove file from storage
+        remove_file(file_record['filename'])
+        
+        # Delete record from database
+        File.delete(db, file_id)
+        
+        return jsonify({"message": "File deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @main_bp.route('/my-uploads/<file_id>', methods=['DELETE'])
 @jwt_required()
 def delete_user_upload(file_id):
