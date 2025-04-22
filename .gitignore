@@ -1,1 +1,4 @@
 passwords.txt
+.env
+generate_secret.py
+/uploads
