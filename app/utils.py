@@ -48,7 +48,7 @@ def remove_file(filename):
 
 def generate_download_link(alias, password):
     """Generate a download link for a file"""
-    base_url = "http://localhost:5000/"+alias+"?password="+password 
+    base_url = "https://fileshareflaskapp.onrender.com/"+alias+"?password="+password 
     return base_url
 
 def is_alias_unique(db, alias):
